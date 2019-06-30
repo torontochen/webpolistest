@@ -7,6 +7,7 @@ const path = require("path");
 const fs = require("fs");
 // const streamifier = require("streamifier");
 
+// const DOWNBROWSER_DIR = "./client/public/download";
 const DOWN_DIR = "./download";
 mongoose.set("useFindAndModify", false);
 // const fs = require("fs");
@@ -352,6 +353,7 @@ module.exports = {
       const name = newfilename(filename);
       // const downloadPath = path.join(__dirname, `/\download\/${name}`);
       const downloadPath = `${DOWN_DIR}/${name}`;
+      // const downloadBrowser = `${DOWNBROWSER_DIR}/${name}`;
       // console.log(downloadPath);
       const downloadStream = gridFSBucket.openDownloadStreamByName(filename);
       // console.log(downloadStream);
@@ -421,7 +423,6 @@ module.exports = {
       // await new Promise(() => {
       // const downloadResult = downloadStream
 
-
       downloadStream
         .pipe(fs.createWriteStream(downloadPath))
         .on("error", error => {
@@ -430,6 +431,10 @@ module.exports = {
         })
         .on("finish", () => {
           console.log("done downloading");
+          // // fs.copyFile(downloadPath, downloadBrowser, err => {
+          // //   if (err) throw err;
+          // //   console.log("file was copied");
+          // });
           // res.send('Done Downloading');
         });
 

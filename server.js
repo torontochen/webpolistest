@@ -17,6 +17,7 @@ const pubsub = new PubSub();
 // const fileUpload = require("express-fileupload");
 const app = express();
 const PORT = 4000;
+app.use("/download", express.static("public"));
 
 // app.use(fileUpload());
 
