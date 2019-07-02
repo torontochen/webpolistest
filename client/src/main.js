@@ -258,6 +258,22 @@ new Vue({
   render: h => h(App),
   created() {
     // execute getCurrentUser query
+    // window.addEventListener("offline", this.cleanToken);
+    // localStorage.removeItem("token");
     this.$store.dispatch("getCurrentUser");
+  },
+  // mounted() {
+  //   window.addEventListener("beforeunload", this.cleanToken);
+  // },
+  methods: {
+    cleanToken() {
+      console.log(localStorage.getItem("token"));
+      localStorage.removeItem("token");
+    }
   }
+  // beforeDestroy() {
+  // if (localStorage.getItem("token") !== "") {
+  // localStorage.clear();
+  // }
+  // }
 }).$mount("#app");

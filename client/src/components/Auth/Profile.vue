@@ -156,6 +156,7 @@
           <a
             target="_blank"
             v-bind:href="downloadImagePath"
+            @click="downloadDialog=false"
             download
           >click to download </a>
           <!-- <v-card-text>

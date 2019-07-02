@@ -71,6 +71,7 @@ const getUser = async token => {
       throw new AuthenticationError(
         "Your session has ended. Please sign in again."
       );
+      // next();
     }
   }
 };

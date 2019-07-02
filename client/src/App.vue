@@ -236,6 +236,15 @@ import { mapGetters } from "vuex";
 
 export default {
   name: "App",
+  // beforeDestroy() {
+  //   if (localStorage.getItem("token") !== "") {
+  //     localStorage.clear();
+  //     console.log(localStorage.getItem("token"));
+  //   }
+  // },
+  // created() {
+  //   window.addEventListener("offline", this.cleanToken);
+  // },
   data() {
     return {
       searchTerm: "",
@@ -315,6 +324,10 @@ export default {
         searchTerm: this.searchTerm
       });
     },
+    // cleanToken() {
+    //   console.log(localStorage.getItem("token"));
+    //   localStorage.removeItem("token");
+    // },
     handleSignoutUser() {
       this.$store.dispatch("signoutUser");
     },
