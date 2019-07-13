@@ -18,13 +18,24 @@ const conn = mongoose.connection;
 // const crypto = require("crypto");
 
 const createToken = (user, secret, expiresIn) => {
-  const { username, email } = user;
-  return jwt.sign({ username, email }, secret, { expiresIn });
+  const {
+    username,
+    email
+  } = user;
+  return jwt.sign({
+    username,
+    email
+  }, secret, {
+    expiresIn
+  });
 };
 
 module.exports = {
   Query: {
-    getCurrentUser: async (_, args, { User, currentUser }) => {
+    getCurrentUser: async (_, args, {
+      User,
+      currentUser
+    }) => {
       if (!currentUser) {
         return null;
       }
@@ -37,9 +48,13 @@ module.exports = {
       return user;
     },
 
-    getPosts: async (_, args, { Post }) => {
+    getPosts: async (_, args, {
+      Post
+    }) => {
       const posts = await Post.find({})
-        .sort({ createdDate: "desc" })
+        .sort({
+          createdDate: "desc"
+        })
         .populate({
           path: "createdBy",
           model: "User"
@@ -48,41 +63,72 @@ module.exports = {
       return posts;
     },
 
-    getUserPosts: async (_, { userId }, { Post }) => {
+    getUserPosts: async (_, {
+      userId
+    }, {
+      Post
+    }) => {
       const posts = await Post.find({
         createdBy: userId
       });
       return posts;
     },
-    getPost: async (_, { postId }, { Post }) => {
-      const post = await Post.findOne({ _id: postId }).populate({
+    getPost: async (_, {
+      postId
+    }, {
+      Post
+    }) => {
+      const post = await Post.findOne({
+        _id: postId
+      }).populate({
         path: "messages.messageUser",
         model: "User"
       });
       return post;
     },
-    searchPosts: async (_, { searchTerm }, { Post }) => {
+    searchPosts: async (_, {
+      searchTerm
+    }, {
+      Post
+    }) => {
       if (searchTerm) {
         const searchResults = await Post.find(
-          // Perform text search for search value of 'searchTerm'
-          { $text: { $search: searchTerm } },
-          // Assign 'searchTerm' a text score to provide best match
-          { score: { $meta: "textScore" } }
-          // Sort results according to that textScore (as well as by likes in descending order)
-        )
+            // Perform text search for search value of 'searchTerm'
+            {
+              $text: {
+                $search: searchTerm
+              }
+            },
+            // Assign 'searchTerm' a text score to provide best match
+            {
+              score: {
+                $meta: "textScore"
+              }
+            }
+            // Sort results according to that textScore (as well as by likes in descending order)
+          )
           .sort({
-            score: { $meta: "textScore" },
+            score: {
+              $meta: "textScore"
+            },
             likes: "desc"
           })
           .limit(5);
         return searchResults;
       }
     },
-    infiniteScrollPosts: async (_, { pageNum, pageSize }, { Post }) => {
+    infiniteScrollPosts: async (_, {
+      pageNum,
+      pageSize
+    }, {
+      Post
+    }) => {
       let posts;
       if (pageNum === 1) {
         posts = await Post.find({})
-          .sort({ createdDate: "desc" })
+          .sort({
+            createdDate: "desc"
+          })
           .populate({
             path: "createdBy",
             model: "User"
@@ -92,7 +138,9 @@ module.exports = {
         // If page number is greater than one, figure out how many documents to skip
         const skips = pageSize * (pageNum - 1);
         posts = await Post.find({})
-          .sort({ createdDate: "desc" })
+          .sort({
+            createdDate: "desc"
+          })
           .populate({
             path: "createdBy",
             model: "User"
@@ -103,14 +151,25 @@ module.exports = {
       const totalDocs = await Post.countDocuments();
       const hasMore = totalDocs > pageSize * pageNum;
       // console.log(posts);
-      return { posts, hasMore };
+      return {
+        posts,
+        hasMore
+      };
     }
   },
   Mutation: {
     addPost: async (
-      _,
-      { title, imageName, categories, description, creatorId, imageBase64 },
-      { Post, pubsub }
+      _, {
+        title,
+        imageName,
+        categories,
+        description,
+        creatorId,
+        imageBase64
+      }, {
+        Post,
+        pubsub
+      }
     ) => {
       // const post = await Post.findOneAndUpdate(
       //   { imageName },
@@ -130,43 +189,83 @@ module.exports = {
         imageBase64
       }).save();
 
-      pubsub.publish("POST_ADDED", { postAdded: newPost });
+      pubsub.publish("POST_ADDED", {
+        postAdded: newPost
+      });
 
       // console.log(newPost);
       return newPost;
     },
 
     updateUserPost: async (
-      _,
-      { postId, userId, title, categories, description },
-      { Post }
+      _, {
+        postId,
+        userId,
+        title,
+        categories,
+        description
+      }, {
+        Post
+      }
     ) => {
       const post = await Post.findOneAndUpdate(
         // Find post by postId and createdBy
-        { _id: postId, createdBy: userId },
-        { $set: { title, categories, description } },
-        { new: true }
+        {
+          _id: postId,
+          createdBy: userId
+        }, {
+          $set: {
+            title,
+            categories,
+            description
+          }
+        }, {
+          new: true
+        }
       );
       return post;
     },
 
-    deleteUserPost: async (_, { postId }, { Post }) => {
-      const post = await Post.findOneAndRemove({ _id: postId });
+    deleteUserPost: async (_, {
+      postId
+    }, {
+      Post
+    }) => {
+      const post = await Post.findOneAndRemove({
+        _id: postId
+      });
       return post;
     },
 
-    addPostMessage: async (_, { messageBody, userId, postId }, { Post }) => {
+    addPostMessage: async (_, {
+      messageBody,
+      userId,
+      postId
+    }, {
+      Post
+    }) => {
       const newMessage = {
         messageBody,
         messageUser: userId
       };
       const post = await Post.findOneAndUpdate(
         // find post by id
-        { _id: postId },
+        {
+          _id: postId
+        },
         // prepend (push) new message to beginning of messages array
-        { $push: { messages: { $each: [newMessage], $position: 0 } } },
+        {
+          $push: {
+            messages: {
+              $each: [newMessage],
+              $position: 0
+            }
+          }
+        },
         // return fresh document after update
-        { new: true }
+        {
+          new: true
+        }
       ).populate({
         path: "messages.messageUser",
         model: "User"
@@ -174,48 +273,89 @@ module.exports = {
       return post.messages[0];
     },
 
-    likePost: async (_, { postId, username }, { Post, User }) => {
+    likePost: async (_, {
+      postId,
+      username
+    }, {
+      Post,
+      User
+    }) => {
       // Find Post, add 1 to its 'like' value
-      const post = await Post.findOneAndUpdate(
-        { _id: postId },
-        { $inc: { likes: 1 } },
-        { new: true }
-      );
+      const post = await Post.findOneAndUpdate({
+        _id: postId
+      }, {
+        $inc: {
+          likes: 1
+        }
+      }, {
+        new: true
+      });
       // Find User, add id of post to its favorites array (which will be populated as Posts)
-      const user = await User.findOneAndUpdate(
-        { username },
-        { $addToSet: { favorites: postId } },
-        { new: true }
-      ).populate({
+      const user = await User.findOneAndUpdate({
+        username
+      }, {
+        $addToSet: {
+          favorites: postId
+        }
+      }, {
+        new: true
+      }).populate({
         path: "favorites",
         model: "Post"
       });
       // Return only likes from 'post' and favorites from 'user'
-      return { likes: post.likes, favorites: user.favorites };
+      return {
+        likes: post.likes,
+        favorites: user.favorites
+      };
     },
 
-    unlikePost: async (_, { postId, username }, { Post, User }) => {
+    unlikePost: async (_, {
+      postId,
+      username
+    }, {
+      Post,
+      User
+    }) => {
       // Find Post, add -1 to its 'like' value
-      const post = await Post.findOneAndUpdate(
-        { _id: postId },
-        { $inc: { likes: -1 } },
-        { new: true }
-      );
+      const post = await Post.findOneAndUpdate({
+        _id: postId
+      }, {
+        $inc: {
+          likes: -1
+        }
+      }, {
+        new: true
+      });
       // Find User, remove id of post from its favorites array (which will be populated as Posts)
-      const user = await User.findOneAndUpdate(
-        { username },
-        { $pull: { favorites: postId } },
-        { new: true }
-      ).populate({
+      const user = await User.findOneAndUpdate({
+        username
+      }, {
+        $pull: {
+          favorites: postId
+        }
+      }, {
+        new: true
+      }).populate({
         path: "favorites",
         model: "Post"
       });
       // Return only likes from 'post' and favorites from 'user'
-      return { likes: post.likes, favorites: user.favorites };
+      return {
+        likes: post.likes,
+        favorites: user.favorites
+      };
     },
 
-    signinUser: async (_, { username, password }, { User }) => {
-      const user = await User.findOne({ username });
+    signinUser: async (_, {
+      username,
+      password
+    }, {
+      User
+    }) => {
+      const user = await User.findOne({
+        username
+      });
       if (!user || !user.confirmed) {
         throw new Error("User not found/Email verification not done yet");
       }
@@ -230,11 +370,18 @@ module.exports = {
     },
 
     signupUser: async (
-      _,
-      { username, email, password },
-      { User, transporter }
+      _, {
+        username,
+        email,
+        password
+      }, {
+        User,
+        transporter
+      }
     ) => {
-      const user = await User.findOne({ username });
+      const user = await User.findOne({
+        username
+      });
       if (user) {
         throw new Error("User already exists");
       }
@@ -254,13 +401,24 @@ module.exports = {
         html: `Please click this email to confirm your email: <a href="${url}">${url}</a>`
       });
 
-      return { token, emailSent: true };
+      return {
+        token,
+        emailSent: true
+      };
     },
 
-    uploadImage: async (_parent, { file, username }, info) => {
+    uploadImage: async (_parent, {
+      file,
+      username
+    }, info) => {
       // console.log(file);
 
-      const { createReadStream, filename, mimetype, encoding } = await file;
+      const {
+        createReadStream,
+        filename,
+        mimetype,
+        encoding
+      } = await file;
       // const arrayBufferToBase64 = buffer => {
       //   let binary = "";
       //   let bytes = [].slice.call(new Uint8Array(buffer));
@@ -318,16 +476,19 @@ module.exports = {
       });
       // console.log(downloadStream);
       // const post = await Post.findOne({ imageName: fileName });
+
       return {
         id: uploadStream.id,
         filename: fileName,
         mimetype,
-        imageBase64: imageBase64,
         encoding
       };
     },
 
-    downloadImage: async (_parent, { filename, username }, info) => {
+    downloadImage: async (_parent, {
+      filename,
+      username
+    }, info) => {
       // const stream = fs.createReadStream();
       // const WriteStream = require("fs-capacitor");
       // const { createReadStream } = await upload;
@@ -451,13 +612,17 @@ module.exports = {
       //   .pipe(destination);
 
       // console.log(downloadResult);
-      return { fileDir: downloadPath };
+      return {
+        fileDir: downloadPath
+      };
     }
   },
 
   Subscription: {
     postAdded: {
-      subscribe: (_parent, args, { pubsub }) => {
+      subscribe: (_parent, args, {
+        pubsub
+      }) => {
         // console.log(userId);
         // const post = await Post.findOne({ createdBy: userId });
         console.log("subscription is going");

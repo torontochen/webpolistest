@@ -1,7 +1,9 @@
-import { gql } from "apollo-boost";
+import {
+  gql
+} from "apollo-boost";
 
 /* Posts Queries */
-export const GET_POSTS = gql`
+export const GET_POSTS = gql `
   query {
     getPosts {
       _id
@@ -11,7 +13,7 @@ export const GET_POSTS = gql`
   }
 `;
 
-export const GET_POST = gql`
+export const GET_POST = gql `
   query($postId: ID!) {
     getPost(postId: $postId) {
       _id
@@ -36,7 +38,7 @@ export const GET_POST = gql`
   }
 `;
 
-export const SEARCH_POSTS = gql`
+export const SEARCH_POSTS = gql `
   query($searchTerm: String) {
     searchPosts(searchTerm: $searchTerm) {
       _id
@@ -49,7 +51,7 @@ export const SEARCH_POSTS = gql`
 `;
 
 /* User Queries */
-export const GET_CURRENT_USER = gql`
+export const GET_CURRENT_USER = gql `
   query {
     getCurrentUser {
       _id
@@ -68,7 +70,7 @@ export const GET_CURRENT_USER = gql`
   }
 `;
 
-export const GET_USER_POSTS = gql`
+export const GET_USER_POSTS = gql `
   query($userId: ID!) {
     getUserPosts(userId: $userId) {
       _id
@@ -83,7 +85,7 @@ export const GET_USER_POSTS = gql`
   }
 `;
 
-export const INFINITE_SCROLL_POSTS = gql`
+export const INFINITE_SCROLL_POSTS = gql `
   query($pageNum: Int!, $pageSize: Int!) {
     infiniteScrollPosts(pageNum: $pageNum, pageSize: $pageSize) {
       hasMore
@@ -110,7 +112,7 @@ export const INFINITE_SCROLL_POSTS = gql`
 `;
 
 /* Posts Mutations */
-export const ADD_POST = gql`
+export const ADD_POST = gql `
   mutation(
     $title: String!
     $imageName: String
@@ -137,7 +139,7 @@ export const ADD_POST = gql`
   }
 `;
 
-export const UPDATE_USER_POST = gql`
+export const UPDATE_USER_POST = gql `
   mutation(
     $postId: ID!
     $userId: ID!
@@ -169,7 +171,7 @@ export const UPDATE_USER_POST = gql`
   }
 `;
 
-export const DELETE_USER_POST = gql`
+export const DELETE_USER_POST = gql `
   mutation($postId: ID!) {
     deleteUserPost(postId: $postId) {
       _id
@@ -177,7 +179,7 @@ export const DELETE_USER_POST = gql`
   }
 `;
 
-export const ADD_POST_MESSAGE = gql`
+export const ADD_POST_MESSAGE = gql `
   mutation($messageBody: String!, $userId: ID!, $postId: ID!) {
     addPostMessage(
       messageBody: $messageBody
@@ -196,7 +198,7 @@ export const ADD_POST_MESSAGE = gql`
   }
 `;
 
-export const LIKE_POST = gql`
+export const LIKE_POST = gql `
   mutation($postId: ID!, $username: String!) {
     likePost(postId: $postId, username: $username) {
       likes
@@ -209,7 +211,7 @@ export const LIKE_POST = gql`
   }
 `;
 
-export const UNLIKE_POST = gql`
+export const UNLIKE_POST = gql `
   mutation($postId: ID!, $username: String!) {
     unlikePost(postId: $postId, username: $username) {
       likes
@@ -223,7 +225,7 @@ export const UNLIKE_POST = gql`
 `;
 
 /* User Mutations */
-export const SIGNIN_USER = gql`
+export const SIGNIN_USER = gql `
   mutation($username: String!, $password: String!) {
     signinUser(username: $username, password: $password) {
       token
@@ -232,7 +234,7 @@ export const SIGNIN_USER = gql`
   }
 `;
 
-export const SIGNUP_USER = gql`
+export const SIGNUP_USER = gql `
   mutation($username: String!, $email: String!, $password: String!) {
     signupUser(username: $username, email: $email, password: $password) {
       token
@@ -241,18 +243,17 @@ export const SIGNUP_USER = gql`
   }
 `;
 
-export const UPLOAD_IMAGE = gql`
+export const UPLOAD_IMAGE = gql `
   mutation($file: Upload!, $username: String!) {
     uploadImage(file: $file, username: $username) {
       id
       filename
       mimetype
-      imageBase64
     }
   }
 `;
 
-export const DOWNLOAD_IMAGE = gql`
+export const DOWNLOAD_IMAGE = gql `
   mutation($filename: String!, $username: String!) {
     downloadImage(filename: $filename, username: $username) {
       fileDir
@@ -260,7 +261,7 @@ export const DOWNLOAD_IMAGE = gql`
   }
 `;
 
-export const POST_ADDED = gql`
+export const POST_ADDED = gql `
   subscription {
     postAdded {
       _id

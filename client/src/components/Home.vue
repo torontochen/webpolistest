@@ -84,7 +84,7 @@ export default {
         result({ data }) {
           // console.log(data.postAdded);
           // console.log(this.posts);
-          this.newPosts = this.posts.unshift(data.postAdded);
+          this.newPosts = this.posts.push(data.postAdded);
           // console.log(this.posts.push(data.postAdded));
           this.$store.commit("setPosts", this.posts);
           // this.$store.getters.posts;

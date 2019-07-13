@@ -2,7 +2,9 @@ import Vue from "vue";
 import Vuex from "vuex";
 import router from "./router";
 
-import { defaultClient as apolloClient } from "./main";
+import {
+  defaultClient as apolloClient
+} from "./main";
 
 import {
   GET_CURRENT_USER,
@@ -85,13 +87,17 @@ export default new Vuex.Store({
     // clearEmailSent: state => (state.emailSent = null)
   },
   actions: {
-    getCurrentUser: ({ commit }) => {
+    getCurrentUser: ({
+      commit
+    }) => {
       commit("setLoading", true);
       apolloClient
         .query({
           query: GET_CURRENT_USER
         })
-        .then(({ data }) => {
+        .then(({
+          data
+        }) => {
           commit("setLoading", false);
           // Add user data to state
           commit("setUser", data.getCurrentUser);
@@ -103,7 +109,9 @@ export default new Vuex.Store({
         });
     },
 
-    getPosts: ({ commit }) => {
+    getPosts: ({
+      commit
+    }) => {
       commit("setLoading", true);
       apolloClient
         .query({
@@ -111,7 +119,9 @@ export default new Vuex.Store({
         })
         .then(postsData => {
           // console.log(postsData);
-          const { data } = postsData;
+          const {
+            data
+          } = postsData;
           commit("setPosts", data.getPosts);
           commit("setLoading", false);
         })
@@ -121,13 +131,17 @@ export default new Vuex.Store({
         });
     },
 
-    getUserPosts: ({ commit }, payload) => {
+    getUserPosts: ({
+      commit
+    }, payload) => {
       apolloClient
         .query({
           query: GET_USER_POSTS,
           variables: payload
         })
-        .then(({ data }) => {
+        .then(({
+          data
+        }) => {
           commit("setUserPosts", data.getUserPosts);
           // console.log(data.getUserPosts);
         })
@@ -136,36 +150,42 @@ export default new Vuex.Store({
         });
     },
 
-    searchPosts: ({ commit }, payload) => {
+    searchPosts: ({
+      commit
+    }, payload) => {
       apolloClient
         .query({
           query: SEARCH_POSTS,
           variables: payload
         })
-        .then(({ data }) => {
+        .then(({
+          data
+        }) => {
           commit("setSearchResults", data.searchPosts);
         })
         .catch(err => console.error(err));
     },
 
-    addPost: ({ commit }, payload) => {
+    addPost: ({
+      commit
+    }, payload) => {
       apolloClient
         .mutate({
           mutation: ADD_POST,
           variables: payload,
-          update: (cache, { data: { addPost } }) => {
-            // First read the query you want to update
-            const data = cache.readQuery({ query: GET_POSTS });
-            // console.log(data);
-            // Create updated data
-            data.getPosts.unshift(addPost);
-            // Write updated data back to query
-            // console.log(data);
-            cache.writeQuery({
-              query: GET_POSTS,
-              data
-            });
-          },
+          // update: (cache, { data: { addPost } }) => {
+          //   // First read the query you want to update
+          //   const data = cache.readQuery({ query: GET_POSTS });
+          //   // console.log(data);
+          //   // Create updated data
+          //   data.getPosts.unshift(addPost);
+          //   // Write updated data back to query
+          //   // console.log(data);
+          //   cache.writeQuery({
+          //     query: GET_POSTS,
+          //     data
+          //   });
+          // },
           // optimistic response ensures data is added immediately as we specified for the update function
           optimisticResponse: {
             __typename: "Mutation",
@@ -176,17 +196,17 @@ export default new Vuex.Store({
             }
           },
           // Rerun specified queries after performing the mutation in order to get fresh data
-          refetchQueries: [
-            {
-              query: INFINITE_SCROLL_POSTS,
-              variables: {
-                pageNum: 1,
-                pageSize: 4
-              }
+          refetchQueries: [{
+            query: INFINITE_SCROLL_POSTS,
+            variables: {
+              pageNum: 1,
+              pageSize: 4
             }
-          ]
+          }]
         })
-        .then(({ data }) => {
+        .then(({
+          data
+        }) => {
           // console.log(data.addPost);
         })
         .catch(err => {
@@ -194,13 +214,18 @@ export default new Vuex.Store({
         });
     },
 
-    updateUserPost: ({ state, commit }, payload) => {
+    updateUserPost: ({
+      state,
+      commit
+    }, payload) => {
       apolloClient
         .mutate({
           mutation: UPDATE_USER_POST,
           variables: payload
         })
-        .then(({ data }) => {
+        .then(({
+          data
+        }) => {
           const index = state.userPosts.findIndex(
             post => post._id === data.updateUserPost._id
           );
@@ -216,13 +241,18 @@ export default new Vuex.Store({
         });
     },
 
-    deleteUserPost: ({ state, commit }, payload) => {
+    deleteUserPost: ({
+      state,
+      commit
+    }, payload) => {
       apolloClient
         .mutate({
           mutation: DELETE_USER_POST,
           variables: payload
         })
-        .then(({ data }) => {
+        .then(({
+          data
+        }) => {
           const index = state.userPosts.findIndex(
             post => post._id === data.deleteUserPost._id
           );
@@ -237,7 +267,9 @@ export default new Vuex.Store({
         });
     },
 
-    signinUser: ({ commit }, payload) => {
+    signinUser: ({
+      commit
+    }, payload) => {
       commit("clearError");
       commit("setLoading", true);
       apolloClient
@@ -245,7 +277,9 @@ export default new Vuex.Store({
           mutation: SIGNIN_USER,
           variables: payload
         })
-        .then(({ data }) => {
+        .then(({
+          data
+        }) => {
           commit("setLoading", false);
           localStorage.setItem("token", data.signinUser.token);
           // to make sure created method is run in main.js (we run getCurrentUser), reload the page
@@ -264,7 +298,9 @@ export default new Vuex.Store({
         });
     },
 
-    signupUser: ({ commit }, payload) => {
+    signupUser: ({
+      commit
+    }, payload) => {
       commit("clearError");
       commit("setLoading", true);
       apolloClient
@@ -272,7 +308,9 @@ export default new Vuex.Store({
           mutation: SIGNUP_USER,
           variables: payload
         })
-        .then(({ data }) => {
+        .then(({
+          data
+        }) => {
           // console.log(data);
           commit("setLoading", false);
           localStorage.setItem("token", data.signupUser.token);
@@ -288,7 +326,9 @@ export default new Vuex.Store({
         });
     },
 
-    signoutUser: async ({ commit }) => {
+    signoutUser: async ({
+      commit
+    }) => {
       // clear user in state
       commit("clearUser");
       // remove token in localStorage
@@ -299,7 +339,9 @@ export default new Vuex.Store({
       router.push("/");
     },
 
-    uploadImage: ({ commit }, payload) => {
+    uploadImage: ({
+      commit
+    }, payload) => {
       // console.log(payload);
 
       apolloClient
@@ -307,26 +349,32 @@ export default new Vuex.Store({
           mutation: UPLOAD_IMAGE,
           variables: payload
         })
-        .then(({ data }) => {
+        .then(({
+          data
+        }) => {
           // console.log("image upload info");
           // console.log(data.uploadImage);
-          commit("clearImageName");
+          // commit("clearImageName");
           commit("setImageName", data.uploadImage.filename);
-          commit("clearImageBase64");
-          commit("setImageBase64", data.uploadImage.imageBase64);
+          // commit("clearImageBase64");
+          // commit("setImageBase64", data.uploadImage.imageBase64);
 
           // console.log(state.imageId);
         })
         .catch(err => console.error(err));
     },
 
-    downloadImage: ({ commit }, payload) => {
+    downloadImage: ({
+      commit
+    }, payload) => {
       apolloClient
         .mutate({
           mutation: DOWNLOAD_IMAGE,
           variables: payload
         })
-        .then(({ data }) => {
+        .then(({
+          data
+        }) => {
           console.log(data);
           commit("setDownloadImagePath", data.downloadImage.fileDir);
         });

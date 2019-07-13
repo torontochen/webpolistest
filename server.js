@@ -43,7 +43,9 @@ const typeDefs = fs.readFileSync(filePath, "utf-8");
 const resolvers = require("./resolvers");
 
 // Import Environment Variables and Mongoose Models
-require("dotenv").config({ path: "variables.env" });
+require("dotenv").config({
+  path: "variables.env"
+});
 const User = require("./models/User");
 const Post = require("./models/Post");
 
@@ -84,7 +86,10 @@ const server = new ApolloServer({
     name: error.name,
     message: error.message.replace("Context creation failed:", "")
   }),
-  context: async ({ req, connection }) => {
+  context: async ({
+    req,
+    connection
+  }) => {
     if (connection) {
       // console.log(connection.context["Authorization"]);
       const token = connection.context["Authorization"];
@@ -112,8 +117,14 @@ const server = new ApolloServer({
   // }
 });
 
-const corsOptions = { credentials: true, origin: "http://localhost:8080" };
-server.applyMiddleware({ app, cors: corsOptions });
+const corsOptions = {
+  credentials: true,
+  origin: "http://localhost:8080"
+};
+server.applyMiddleware({
+  app,
+  cors: corsOptions
+});
 
 app.get("/:token", async (req, res) => {
   // console.dir(req.params.token);
@@ -125,11 +136,15 @@ app.get("/:token", async (req, res) => {
   try {
     const id = jwt.verify(req.params.token, process.env.SECRET);
     console.log(id.username);
-    await User.findOneAndUpdate(
-      { username: id.username },
-      { $set: { confirmed: true } },
-      { new: true }
-    );
+    await User.findOneAndUpdate({
+      username: id.username
+    }, {
+      $set: {
+        confirmed: true
+      }
+    }, {
+      new: true
+    });
   } catch (e) {
     res.send("error");
   }

@@ -178,7 +178,7 @@ export default {
           categories: this.categories,
           description: this.description,
           creatorId: this.user._id,
-          imageBase64: this.imageBase64
+          imageBase64: this.imageUrl
         });
         this.$router.push("/");
       }
@@ -198,13 +198,19 @@ export default {
       if (filename.lastIndexOf(".") <= 0) {
         return alert("Please add a valid file!");
       }
-      if (files[0].type === 'image/jpeg' ||
-          files[0].type === 'image/png' || files[0].type === 'image/jpg' || files[0].type === 'image/gif'  ) {
+      if (
+        files[0].type === "image/jpeg" ||
+        files[0].type === "image/png" ||
+        files[0].type === "image/jpg" ||
+        files[0].type === "image/gif"
+      ) {
         const fileReader = new FileReader();
+        fileReader.readAsDataURL(files[0]);
         fileReader.addEventListener("load", () => {
           this.imageUrl = fileReader.result;
+          console.log(this.imageUrl);
         });
-        fileReader.readAsDataURL(files[0]);
+
         // this.image = files[0];
         // console.log(files);
         // const formData = new FormData();
@@ -212,7 +218,8 @@ export default {
         // console.log(this.user);
         this.$store.dispatch("uploadImage", {
           file: files[0],
-          username: this.user.username
+          username: this.user.username,
+          imageBase64: this.imageUrl
         });
       } else {
         return alert("Please add a image(jpeg,jpg,png,gif) file!");
