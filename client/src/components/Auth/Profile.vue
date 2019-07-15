@@ -146,24 +146,26 @@
           </v-card>
         </v-flex>
       </v-layout>
+      <v-layout align-center>
+        <v-dialog
+          v-model="downloadDialog"
+          max-width="290"
+        >
+          <v-card>
+            <v-card-title class="headline">Use Google's location service?</v-card-title>
+            <p class="text-md-center text-xs-center"><a
+                class="mb-4"
+                target="_blank"
+                v-bind:href="downloadImagePath"
+                @click="downloadDialog=false"
+                download
+              >click to download </a></p>
 
-      <v-dialog
-        v-model="downloadDialog"
-        max-width="290"
-      >
-        <v-card>
-          <v-card-title class="headline">Use Google's location service?</v-card-title>
-          <a
-            target="_blank"
-            v-bind:href="downloadImagePath"
-            @click="downloadDialog=false"
-            download
-          >click to download </a>
-          <!-- <v-card-text>
+            <!-- <v-card-text>
           Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.
         </v-card-text> -->
 
-          <!-- <v-card-actions>
+            <!-- <v-card-actions>
           <v-spacer></v-spacer>
 
           <v-btn
@@ -182,8 +184,9 @@
             Agree
           </v-btn>
         </v-card-actions> -->
-        </v-card>
-      </v-dialog>
+          </v-card>
+        </v-dialog>
+      </v-layout>
     </v-container>
 
     <!-- Edit Post Dialog -->

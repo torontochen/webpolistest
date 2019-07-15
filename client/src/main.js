@@ -3,17 +3,34 @@ import "./plugins/vuetify";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
-import { VueMasonryPlugin } from "vue-masonry";
+import {
+  VueMasonryPlugin
+} from "vue-masonry";
 
-import { ApolloClient } from "apollo-client";
-import { InMemoryCache } from "apollo-cache-inmemory";
+import {
+  ApolloClient
+} from "apollo-client";
+import {
+  InMemoryCache
+} from "apollo-cache-inmemory";
 // import { HttpLink } from "apollo-link-http";
-import { createUploadLink } from "apollo-upload-client";
-import { onError } from "apollo-link-error";
+import {
+  createUploadLink
+} from "apollo-upload-client";
+import {
+  onError
+} from "apollo-link-error";
 // import { withClientState } from "apollo-link-state";
-import { ApolloLink, Observable } from "apollo-link";
-import { WebSocketLink } from "apollo-link-ws";
-import { getMainDefinition } from "apollo-utilities";
+import {
+  ApolloLink,
+  Observable
+} from "apollo-link";
+import {
+  WebSocketLink
+} from "apollo-link-ws";
+import {
+  getMainDefinition
+} from "apollo-utilities";
 // import ApolloClient from "apollo-boost";
 import VueApollo from "vue-apollo";
 
@@ -89,7 +106,10 @@ const requestLink = new ApolloLink((operation, forward) => {
 
 // Web socket link for subscriptions
 const wsLink = ApolloLink.from([
-  onError(({ graphQLErrors, networkError }) => {
+  onError(({
+    graphQLErrors,
+    networkError
+  }) => {
     if (graphQLErrors) {
       for (let err of graphQLErrors) {
         console.dir(err);
@@ -123,6 +143,9 @@ const wsLink = ApolloLink.from([
     options: {
       reconnect: true,
       connectionParams: () => {
+        if (!localStorage.token) {
+          localStorage.setItem("token", "");
+        }
         if (localStorage.token) {
           const token = localStorage.getItem("token");
           return {
@@ -136,7 +159,10 @@ const wsLink = ApolloLink.from([
 
 // HTTP link for queries and mutations
 const httpLink = ApolloLink.from([
-  onError(({ graphQLErrors, networkError }) => {
+  onError(({
+    graphQLErrors,
+    networkError
+  }) => {
     if (graphQLErrors) {
       for (let err of graphQLErrors) {
         console.dir(err);
@@ -169,8 +195,13 @@ const httpLink = ApolloLink.from([
 // Link to direct ws and http traffic to the correct place
 const link = ApolloLink.split(
   // Pick which links get the data based on the operation kind
-  ({ query }) => {
-    const { kind, operation } = getMainDefinition(query);
+  ({
+    query
+  }) => {
+    const {
+      kind,
+      operation
+    } = getMainDefinition(query);
     return kind === "OperationDefinition" && operation === "subscription";
   },
   wsLink,
@@ -247,7 +278,9 @@ export const defaultClient = new ApolloClient({
 // }
 // });
 
-const apolloProvider = new VueApollo({ defaultClient });
+const apolloProvider = new VueApollo({
+  defaultClient
+});
 
 Vue.config.productionTip = false;
 

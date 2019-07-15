@@ -93,6 +93,7 @@ const server = new ApolloServer({
     if (connection) {
       // console.log(connection.context["Authorization"]);
       const token = connection.context["Authorization"];
+      console.log(token)
       return {
         User,
         Post,
@@ -102,6 +103,7 @@ const server = new ApolloServer({
       };
     } else {
       const token = req.headers["authorization"];
+      console.log(token)
       return {
         User,
         Post,

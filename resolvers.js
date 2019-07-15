@@ -443,30 +443,30 @@ module.exports = {
       });
 
       // console.log(uploadStream);
-      var imageStream = [];
-      let imageBase64 = "";
-      stream.on("data", data => {
-        // console.log(src);
-        imageStream.push(data);
-        // console.log(imageBuffer);
-      });
-      stream.on("end", () => {
-        // console.log(imageBuffer);
-        const imageBuffer = Buffer.concat(imageStream);
-        let binary = "";
-        let bytes = [].slice.call(new Uint8Array(imageBuffer));
-        bytes.forEach(b => (binary += String.fromCharCode(b)));
-        // console.log(binary);
-        let base64String = Buffer.from(binary, "binary").toString("base64");
+      // var imageStream = [];
+      // let imageBase64 = "";
+      // stream.on("data", data => {
+      //   // console.log(src);
+      //   imageStream.push(data);
+      //   // console.log(imageBuffer);
+      // });
+      // stream.on("end", () => {
+      //   // console.log(imageBuffer);
+      //   const imageBuffer = Buffer.concat(imageStream);
+      //   let binary = "";
+      //   let bytes = [].slice.call(new Uint8Array(imageBuffer));
+      //   bytes.forEach(b => (binary += String.fromCharCode(b)));
+      //   // console.log(binary);
+      //   let base64String = Buffer.from(binary, "binary").toString("base64");
 
-        // console.log(arrayBufferToBase64(imageStream));
-        imageBase64 = `data:image/${mimetype};base64,` + base64String;
+      //   // console.log(arrayBufferToBase64(imageStream));
+      //   imageBase64 = `data:image/${mimetype};base64,` + base64String;
 
-        // await new Post({
-        //   imageName: fileName,
-        //   imageBase64
-        // }).save();
-      });
+      //   // await new Post({
+      //   //   imageName: fileName,
+      //   //   imageBase64
+      //   // }).save();
+      // });
       // console.log(imageBase64);
       await new Promise((resolve, reject) => {
         stream
