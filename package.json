@@ -23,7 +23,7 @@
     "graphql": "^0.13.2",
     "jsonwebtoken": "^8.3.0",
     "md5": "^2.2.1",
-    "mongoose": "^5.5.8",
+    "mongoose": "^5.7.5",
     "nodemailer": "^6.2.1",
     "nodemailer-smtp-transport": "^2.7.4",
     "save": "^2.3.3",
