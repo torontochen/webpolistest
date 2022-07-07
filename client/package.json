@@ -22,7 +22,7 @@
     "core-js": "^2.6.5",
     "graphql": "^14.2.1",
     "graphql-tag": "^2.10.1",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "subscriptions-transport-ws": "^0.9.16",
     "vue": "^2.6.10",
     "vue-apollo": "^3.0.0-beta.28",
